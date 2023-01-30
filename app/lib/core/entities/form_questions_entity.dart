@@ -1,14 +1,10 @@
-// To parse this JSON data, do
-//
-//     final formQuestionsEntity = formQuestionsEntityFromJson(jsonString);
 import 'dart:convert';
-import 'dart:ffi';
 
 FormQuestionsEntity formQuestionsEntityFromJson(String str) =>
     FormQuestionsEntity.fromJson(json.decode(str) as Map<String, dynamic>);
 
-String formQuestionsEntityToJson(FormQuestionsEntity data) =>
-    json.encode(data.toJson());
+String formQuestionsEntityToJson(FormQuestionsEntity data) => json.encode(data.
+toJson(),);
 
 class FormQuestionsEntity {
   FormQuestionsEntity({
@@ -23,23 +19,22 @@ class FormQuestionsEntity {
   final DateTime createdAt;
   final List<Content> content;
 
-  factory FormQuestionsEntity.fromJson(Map<String, dynamic> json) =>
-      FormQuestionsEntity(
-        name: json["name"] as String,
-        description: json["description"] as String,
-        createdAt: DateTime.parse(json["created_at"] as String),
+  factory FormQuestionsEntity.fromJson(Map<String, dynamic> json) => FormQuestionsEntity(
+        name: json['name'] as String,
+        description: json['description'] as String,
+        createdAt: DateTime.parse(json['created_at'] as String),
         content: List<Content>.from(
-          (json["content"] as List).map(
+          (json['content'] as List).map(
             (x) => Content.fromJson(x as Map<String, dynamic>),
           ),
         ),
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "description": description,
-        "created_at": createdAt.toIso8601String(),
-        "content": List<dynamic>.from(
+        'name': name,
+        'description': description,
+        'created_at': createdAt.toIso8601String(),
+        'content': List<dynamic>.from(
           content.map(
             (x) => x.toJson(),
           ),
@@ -62,44 +57,57 @@ class Content {
   final String id;
   final String index;
   final String type;
-  final int? inputType;
+  final InputType? inputType;
   final String? label;
   final dynamic answer;
   final String? name;
   final List<Option>? options;
 
   factory Content.fromJson(Map<String, dynamic> json) => Content(
-        id: json["id"] as String,
-        index: json["index"] as String,
-        type: json["type"] as String,
-        inputType: json["input_type"] as int?,
-        label: json["label"] as String?,
-        answer: json["answer"],
-        name: json["name"] as String?,
-        options: json["options"] == null
+        id: json['id'] as String,
+        index: json['index'] as String,
+        type: json['type'] as String,
+        inputType: getInputType(json['input_type'] as int?),
+        label: json['label'] as String?,
+        answer: json['answer'],
+        name: json['name'] as String?,
+        options: json['options'] == null
             ? []
             : List<Option>.from(
-                (json["options"] as List).map(
+                (json['options'] as List).map(
                   (x) => Option.fromJson(x as Map<String, dynamic>),
                 ),
               ),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "index": index,
-        "type": type,
-        "input_type": inputType,
-        "label": label,
-        "answer": answer,
-        "name": name,
-        "options": options == null
+        'id': id,
+        'index': index,
+        'type': type,
+        'input_type': inputType,
+        'label': label,
+        'answer': answer,
+        'name': name,
+        'options': options == null
             ? []
             : List<dynamic>.from(
                 options!.map((x) => x.toJson()),
               ),
       };
+  static InputType? getInputType(int? inputValue) {
+    switch (inputValue) {
+      case 1:
+        return InputType.textInput;
+      case 2:
+        return InputType.options;
+      case 3:
+        return InputType.yesNo;
+    }
+    return null;
+  }
 }
+
+enum InputType { textInput, options, yesNo }
 
 class Option {
   Option({
@@ -111,12 +119,12 @@ class Option {
   final String value;
 
   factory Option.fromJson(Map<String, dynamic> json) => Option(
-        label: json["label"] as String,
-        value: json["value"] as String,
+        label: json['label'] as String,
+        value: json['value'] as String,
       );
 
   Map<String, dynamic> toJson() => {
-        "label": label,
-        "value": value,
+        'label': label,
+        'value': value,
       };
 }
